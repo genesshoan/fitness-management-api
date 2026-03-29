@@ -2,6 +2,8 @@ package dev.genesshoan.fitness_management_api.user.domain;
 
 import java.time.LocalDate;
 
+import dev.genesshoan.fitness_management_api.common.domain.DatabaseConstraints;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +19,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user_progress_history")
+@Table(name = "user_progress_history",
+  check = {
+    @CheckConstraint(name = "ck_user_progress_height_positive", constraint = DatabaseConstraints.CK_HEIGHT_POSITIVE),
+    @CheckConstraint(name = "ck_user_progress_weight_positive", constraint = DatabaseConstraints.CK_USER_WEIGHT_POSITIVE)
+  }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

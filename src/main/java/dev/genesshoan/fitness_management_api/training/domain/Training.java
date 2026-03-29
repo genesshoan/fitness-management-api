@@ -5,7 +5,9 @@ import java.util.List;
 
 import dev.genesshoan.fitness_management_api.user.domain.User;
 import dev.genesshoan.fitness_management_api.routine.domain.Routine;
+import dev.genesshoan.fitness_management_api.common.domain.DatabaseConstraints;
 
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,7 +25,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "training")
+@Table(name = "training",
+  check = {
+    @CheckConstraint(name = "ck_training_duration_positive", constraint = DatabaseConstraints.CK_DURATION_MINUTES_POSITIVE)
+  }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
