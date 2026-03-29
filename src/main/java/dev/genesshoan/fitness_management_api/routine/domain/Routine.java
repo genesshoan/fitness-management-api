@@ -47,11 +47,11 @@ public class Routine {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<RoutineSet> routineSets;
-
   @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY)
   private List<Training> trainings;
+
+  @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY)
+  private List<RoutineBlock> blocks;
 
   @PrePersist
   protected void onCreate() {
