@@ -1,8 +1,5 @@
 package dev.genesshoan.fitness_management_api.model.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,8 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,40 +15,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "training")
+@Table(name = "training_comments")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Training {
+public class TrainingComment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, updatable = false)
-  private LocalDateTime dateTime;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "training_id", nullable = false)
+  private Training training;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "exercise_id", nullable = false)
+  private Exercise exercise;
 
   @Column(nullable = false)
-  private int durationMinutes;
+  private Integer block;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "routine_id", nullable = true)
-  private Routine routine;
-
-  @OneToMany(mappedBy = "training", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<TrainingSet> trainingSets;
-
-  @OneToMany(mappedBy = "training", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<TrainingComment> trainingComments;
-
-  @PrePersist
-  protected void createAt() {
-    this.dateTime = LocalDateTime.now();
-  }
+  @Column(nullable = false, columnDefinition = "TEXT")
+  private String text;
 
   @Override
   public int hashCode() {
@@ -68,7 +52,7 @@ public class Training {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Training other = (Training) obj;
+    TrainingComment other = (TrainingComment) obj;
     if (id == null) {
       if (other.id != null)
         return false;
@@ -76,4 +60,5 @@ public class Training {
       return false;
     return true;
   }
+
 }
