@@ -1,5 +1,6 @@
 package dev.genesshoan.fitness_management_api.model.entity;
 
+import java.security.KeyStore.LoadStoreParameter;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,9 +46,8 @@ public class User {
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
-  private Integer height;
-
-  private Integer weight;
+  @Column(nullable = false)
+  private LocalDateTime updatedAt;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
   private List<Routine> routines;
@@ -55,9 +55,12 @@ public class User {
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
   private List<Training> trainings;
 
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+
   @PrePersist
   protected void onCreate() {
     this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
   @Override
