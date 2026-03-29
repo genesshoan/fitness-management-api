@@ -2,6 +2,8 @@ package dev.genesshoan.fitness_management_api.exercise.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,6 +29,10 @@ public class Exercise {
 
   @Column(columnDefinition = "TEXT", nullable = false)
   private String description;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private ExerciseCategory category;
 
   @Override
   public int hashCode() {

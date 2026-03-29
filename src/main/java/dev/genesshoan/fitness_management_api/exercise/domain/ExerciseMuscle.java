@@ -1,6 +1,5 @@
 package dev.genesshoan.fitness_management_api.exercise.domain;
 
-import dev.genesshoan.fitness_management_api.exercise.domain.MuscleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -35,7 +34,7 @@ public class ExerciseMuscle {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private MuscleType type;
+  private MuscleImpact impact;
 
   @Override
   public int hashCode() {

@@ -1,6 +1,5 @@
 package dev.genesshoan.fitness_management_api.exercise.domain;
 
-import dev.genesshoan.fitness_management_api.exercise.domain.MuscleGroup;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
