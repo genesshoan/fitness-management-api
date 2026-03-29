@@ -51,7 +51,7 @@ public class Training {
   private List<TrainingComment> trainingComments;
 
   @PrePersist
-  protected void createAt() {
+  protected void onCreate() {
     this.dateTime = LocalDateTime.now();
   }
 

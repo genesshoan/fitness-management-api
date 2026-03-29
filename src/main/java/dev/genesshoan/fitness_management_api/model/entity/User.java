@@ -1,6 +1,5 @@
 package dev.genesshoan.fitness_management_api.model.entity;
 
-import java.security.KeyStore.LoadStoreParameter;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -60,6 +60,11 @@ public class User {
   @PrePersist
   protected void onCreate() {
     this.createdAt = LocalDateTime.now();
+    this.updatedAt = createdAt;
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
     this.updatedAt = LocalDateTime.now();
   }
 

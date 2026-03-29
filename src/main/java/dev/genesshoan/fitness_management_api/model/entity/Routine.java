@@ -1,5 +1,6 @@
 package dev.genesshoan.fitness_management_api.model.entity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -11,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +34,12 @@ public class Routine {
   @Column(nullable = false, length = 50)
   private String name;
 
+  @Column(nullable = false, updatable = false)
+  private LocalDate createdAt;
+
+  @Column(nullable = false)
+  private LocalDate updatedAt;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
@@ -40,6 +49,17 @@ public class Routine {
 
   @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY)
   private List<Training> trainings;
+
+  @PrePersist
+  protected void onCreate() {
+    this.createdAt = LocalDate.now();
+    this.updatedAt = createdAt;
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    this.updatedAt = LocalDate.now();
+  }
 
   @Override
   public int hashCode() {
