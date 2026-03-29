@@ -1,7 +1,10 @@
-package dev.genesshoan.fitness_management_api.model.entity;
+package dev.genesshoan.fitness_management_api.exercise.domain;
 
+import dev.genesshoan.fitness_management_api.exercise.domain.MuscleGroup;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,12 +15,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "exercises")
+@Table(name = "muscles")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Exercise {
+public class Muscle {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -25,8 +28,9 @@ public class Exercise {
   @Column(nullable = false)
   private String name;
 
-  @Column(columnDefinition = "TEXT", nullable = false)
-  private String description;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private MuscleGroup muscleGroup;
 
   @Override
   public int hashCode() {
@@ -41,7 +45,7 @@ public class Exercise {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Exercise other = (Exercise) obj;
+    Muscle other = (Muscle) obj;
     if (id == null) {
       if (other.id != null)
         return false;

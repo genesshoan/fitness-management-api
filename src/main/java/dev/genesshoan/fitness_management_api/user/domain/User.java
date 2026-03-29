@@ -1,16 +1,19 @@
-package dev.genesshoan.fitness_management_api.model.entity;
+package dev.genesshoan.fitness_management_api.user.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import dev.genesshoan.fitness_management_api.routine.domain.Routine;
+import dev.genesshoan.fitness_management_api.training.domain.Training;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -21,44 +24,49 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "routines")
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Routine {
+public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, length = 50)
-  private String name;
+  @Column(unique = true, nullable = false, length = 255)
+  private String email;
+
+  @Column(nullable = false, length = 60)
+  private String password;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Role role;
 
   @Column(nullable = false, updatable = false)
-  private LocalDate createdAt;
+  private LocalDateTime createdAt;
 
   @Column(nullable = false)
-  private LocalDate updatedAt;
+  private LocalDateTime updatedAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<Routine> routines;
 
-  @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<RoutineSet> routineSets;
-
-  @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
   private List<Training> trainings;
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
 
   @PrePersist
   protected void onCreate() {
-    this.createdAt = LocalDate.now();
+    this.createdAt = LocalDateTime.now();
     this.updatedAt = createdAt;
   }
 
   @PreUpdate
   protected void onUpdate() {
-    this.updatedAt = LocalDate.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
   @Override
@@ -74,7 +82,7 @@ public class Routine {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Routine other = (Routine) obj;
+    User other = (User) obj;
     if (id == null) {
       if (other.id != null)
         return false;

@@ -1,4 +1,4 @@
-package dev.genesshoan.fitness_management_api.model.enums;
+package dev.genesshoan.fitness_management_api.exercise.domain;
 
 public enum MuscleGroup {
   CHEST,

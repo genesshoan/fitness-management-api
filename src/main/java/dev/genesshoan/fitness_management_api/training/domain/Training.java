@@ -1,21 +1,21 @@
-package dev.genesshoan.fitness_management_api.model.entity;
+package dev.genesshoan.fitness_management_api.training.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import dev.genesshoan.fitness_management_api.model.enums.Role;
-import jakarta.persistence.CascadeType;
+import dev.genesshoan.fitness_management_api.user.domain.User;
+import dev.genesshoan.fitness_management_api.routine.domain.Routine;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,49 +23,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "training")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class User {
+public class Training {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(unique = true, nullable = false, length = 255)
-  private String email;
-
-  @Column(nullable = false, length = 60)
-  private String password;
-
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private Role role;
-
   @Column(nullable = false, updatable = false)
-  private LocalDateTime createdAt;
+  private LocalDateTime dateTime;
 
   @Column(nullable = false)
-  private LocalDateTime updatedAt;
+  private int durationMinutes;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<Routine> routines;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<Training> trainings;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "routine_id", nullable = true)
+  private Routine routine;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(mappedBy = "training", fetch = FetchType.LAZY, orphanRemoval = true)
+  private List<TrainingSet> trainingSets;
+
+  @OneToMany(mappedBy = "training", fetch = FetchType.LAZY, orphanRemoval = true)
+  private List<TrainingComment> trainingComments;
 
   @PrePersist
   protected void onCreate() {
-    this.createdAt = LocalDateTime.now();
-    this.updatedAt = createdAt;
-  }
-
-  @PreUpdate
-  protected void onUpdate() {
-    this.updatedAt = LocalDateTime.now();
+    this.dateTime = LocalDateTime.now();
   }
 
   @Override
@@ -81,7 +71,7 @@ public class User {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    User other = (User) obj;
+    Training other = (Training) obj;
     if (id == null) {
       if (other.id != null)
         return false;

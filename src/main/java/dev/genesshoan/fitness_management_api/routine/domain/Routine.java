@@ -1,7 +1,10 @@
-package dev.genesshoan.fitness_management_api.model.entity;
+package dev.genesshoan.fitness_management_api.routine.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
+
+import dev.genesshoan.fitness_management_api.user.domain.User;
+import dev.genesshoan.fitness_management_api.training.domain.Training;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,39 +24,44 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "training")
+@Table(name = "routines")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Training {
+public class Routine {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false, length = 50)
+  private String name;
+
   @Column(nullable = false, updatable = false)
-  private LocalDateTime dateTime;
+  private LocalDate createdAt;
 
   @Column(nullable = false)
-  private int durationMinutes;
+  private LocalDate updatedAt;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "routine_id", nullable = true)
-  private Routine routine;
+  @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY, orphanRemoval = true)
+  private List<RoutineSet> routineSets;
 
-  @OneToMany(mappedBy = "training", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<TrainingSet> trainingSets;
-
-  @OneToMany(mappedBy = "training", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<TrainingComment> trainingComments;
+  @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY)
+  private List<Training> trainings;
 
   @PrePersist
   protected void onCreate() {
-    this.dateTime = LocalDateTime.now();
+    this.createdAt = LocalDate.now();
+    this.updatedAt = createdAt;
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    this.updatedAt = LocalDate.now();
   }
 
   @Override
@@ -68,7 +77,7 @@ public class Training {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Training other = (Training) obj;
+    Routine other = (Routine) obj;
     if (id == null) {
       if (other.id != null)
         return false;

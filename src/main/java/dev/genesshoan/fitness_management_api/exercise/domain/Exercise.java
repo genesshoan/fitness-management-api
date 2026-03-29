@@ -1,13 +1,10 @@
-package dev.genesshoan.fitness_management_api.model.entity;
+package dev.genesshoan.fitness_management_api.exercise.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,29 +12,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "training_comments")
+@Table(name = "exercises")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TrainingComment {
+public class Exercise {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "training_id", nullable = false)
-  private Training training;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "exercise_id", nullable = false)
-  private Exercise exercise;
-
   @Column(nullable = false)
-  private Integer block;
+  private String name;
 
-  @Column(nullable = false, columnDefinition = "TEXT")
-  private String text;
+  @Column(columnDefinition = "TEXT", nullable = false)
+  private String description;
 
   @Override
   public int hashCode() {
@@ -52,7 +41,7 @@ public class TrainingComment {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TrainingComment other = (TrainingComment) obj;
+    Exercise other = (Exercise) obj;
     if (id == null) {
       if (other.id != null)
         return false;
@@ -60,5 +49,4 @@ public class TrainingComment {
       return false;
     return true;
   }
-
 }

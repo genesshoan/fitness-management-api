@@ -1,4 +1,4 @@
-package dev.genesshoan.fitness_management_api.model.entity;
+package dev.genesshoan.fitness_management_api.exercise.domain;
 
 import java.io.Serializable;
 

@@ -1,4 +1,6 @@
-package dev.genesshoan.fitness_management_api.model.entity;
+package dev.genesshoan.fitness_management_api.training.domain;
+
+import dev.genesshoan.fitness_management_api.exercise.domain.Exercise;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

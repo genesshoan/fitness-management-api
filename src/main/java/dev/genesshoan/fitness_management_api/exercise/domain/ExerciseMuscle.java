@@ -1,6 +1,6 @@
-package dev.genesshoan.fitness_management_api.model.entity;
+package dev.genesshoan.fitness_management_api.exercise.domain;
 
-import dev.genesshoan.fitness_management_api.model.enums.MuscleType;
+import dev.genesshoan.fitness_management_api.exercise.domain.MuscleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
