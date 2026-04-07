@@ -1,6 +1,7 @@
 package dev.genesshoan.fitness_management_api.routine.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import dev.genesshoan.fitness_management_api.user.domain.User;
@@ -18,15 +19,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "routines")
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 public class Routine {
@@ -37,10 +37,10 @@ public class Routine {
   @Column(nullable = false, length = 50)
   private String name;
 
-  @Column(nullable = false, updatable = false)
+  @Column(nullable = false, updatable = false, insertable = false)
   private LocalDate createdAt;
 
-  @Column(nullable = false)
+  @Column(nullable = false, insertable = false)
   private LocalDate updatedAt;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -48,10 +48,15 @@ public class Routine {
   private User user;
 
   @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY)
-  private List<Training> trainings;
+  private List<Training> trainings = new ArrayList<>();
 
   @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY)
-  private List<RoutineBlock> blocks;
+  private List<RoutineBlock> blocks = new ArrayList<>();
+
+  public Routine(String name, User user) {
+    this.name = name;
+    this.user = user;
+  }
 
   @PrePersist
   protected void onCreate() {

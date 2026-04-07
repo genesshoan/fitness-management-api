@@ -9,8 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @MappedSuperclass
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@Setter
 public abstract class BaseBlock {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +29,15 @@ public abstract class BaseBlock {
   @Column(nullable = false)
   private Integer restSeconds;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "exercise_id", nullable = false)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "exercise_id")
   private Exercise exercise;
+
+  protected BaseBlock(Integer number, Integer restSeconds, Exercise exercise) {
+    this.number = number;
+    this.restSeconds = restSeconds;
+    this.exercise = exercise;
+  }
 
   @Override
   public int hashCode() {

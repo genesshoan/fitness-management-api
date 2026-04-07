@@ -3,6 +3,7 @@ package dev.genesshoan.fitness_management_api.user.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import dev.genesshoan.fitness_management_api.record.domain.PersonalRecord;
 import dev.genesshoan.fitness_management_api.routine.domain.Routine;
 import dev.genesshoan.fitness_management_api.training.domain.Training;
 import jakarta.persistence.CascadeType;
@@ -44,10 +45,10 @@ public class User {
   @Column(nullable = false)
   private Role role;
 
-  @Column(nullable = false, updatable = false)
+  @Column(nullable = false, updatable = false, insertable = false)
   private LocalDateTime createdAt;
 
-  @Column(nullable = false)
+  @Column(nullable = false, insertable = false)
   private LocalDateTime updatedAt;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
@@ -56,7 +57,8 @@ public class User {
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
   private List<Training> trainings;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<PersonalRecord> personalRecords;
 
   @PrePersist
   protected void onCreate() {

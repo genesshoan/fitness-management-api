@@ -1,65 +1,57 @@
-package dev.genesshoan.fitness_management_api.training.domain;
+package dev.genesshoan.fitness_management_api.record.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+import dev.genesshoan.fitness_management_api.training.domain.TrainingSet;
 import dev.genesshoan.fitness_management_api.user.domain.User;
-import dev.genesshoan.fitness_management_api.routine.domain.Routine;
-import dev.genesshoan.fitness_management_api.common.domain.DatabaseConstraints;
-
-import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "training", check = {
-    @CheckConstraint(name = "ck_training_duration_positive", constraint = DatabaseConstraints.CK_DURATION_MINUTES_POSITIVE)
-})
+@Table(name = "personal_records", uniqueConstraints = @UniqueConstraint(name = "uk_pr_training_set_id_type", columnNames = {
+    "training_set_id", "type" }))
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Training {
+public class PersonalRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @Column(nullable = false, updatable = false, insertable = false)
-  private LocalDateTime dateTime;
-
-  @Column(nullable = false)
-  private int durationMinutes;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "routine_id", nullable = true)
-  private Routine routine;
+  @JoinColumn(name = "training_set_id", nullable = false)
+  private TrainingSet trainingSet;
 
-  @OneToMany(mappedBy = "training", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<TrainingBlock> trainingBlocks;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private PRType type;
 
-  @OneToMany(mappedBy = "training", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<TrainingComment> trainingComments;
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime achievedAt;
 
   @PrePersist
   protected void onCreate() {
-    this.dateTime = LocalDateTime.now();
+    this.achievedAt = LocalDateTime.now();
   }
 
   @Override
@@ -75,7 +67,7 @@ public class Training {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Training other = (Training) obj;
+    PersonalRecord other = (PersonalRecord) obj;
     if (id == null) {
       if (other.id != null)
         return false;

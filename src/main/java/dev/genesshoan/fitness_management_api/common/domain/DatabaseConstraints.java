@@ -26,5 +26,4 @@ public interface DatabaseConstraints {
   // UserProgressHistory constraints
   String CK_HEIGHT_POSITIVE = "height IS NULL OR height > 0";
   String CK_USER_WEIGHT_POSITIVE = "weight IS NULL OR weight > 0";
-
 }

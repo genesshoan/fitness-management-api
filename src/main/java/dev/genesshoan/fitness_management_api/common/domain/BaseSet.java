@@ -6,14 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @MappedSuperclass
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 public abstract class BaseSet {
@@ -26,6 +25,11 @@ public abstract class BaseSet {
 
   @Embedded
   private SetMetrics setMetrics;
+
+  protected BaseSet(Integer number, SetMetrics setMetrics) {
+    this.number = number;
+    this.setMetrics = setMetrics;
+  }
 
   @Override
   public int hashCode() {
